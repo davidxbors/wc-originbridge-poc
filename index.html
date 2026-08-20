@@ -1,18 +1,10 @@
 <!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Vendor Mini App</title>
-<style>body{font:14px/1.4 -apple-system,system-ui,sans-serif;padding:16px;background:#0b0b0c;color:#eaeaea}
-b{color:#7dd3fc}.k{color:#a3e635}.box{border:1px solid #333;border-radius:8px;padding:10px;margin:10px 0;word-break:break-all}
-a.btn{display:block;background:#2563eb;color:#fff;text-decoration:none;padding:14px;border-radius:10px;text-align:center;font-weight:600}</style>
-<h3>Vendor Mini App (its own integration origin)</h3>
-<div class="box">origin: <span class="k" id="o"></span></div>
-<div class="box">window.Android: <span class="k" id="a"></span></div>
-<div class="box">window.WorldApp: <pre class="k" id="w" style="white-space:pre-wrap"></pre></div>
-<a class="btn" id="go" href="https://wcpoc-attacker-8f3a1.storage.googleapis.com/x6.html">Navigate to UNRELATED third-party origin &rarr;</a>
-<script>
-document.getElementById('o').textContent = location.origin;
-document.getElementById('a').textContent = typeof window.Android;
-document.getElementById('w').textContent = JSON.stringify(window.WorldApp, null, 1);
-if (new URLSearchParams(location.search).get('auto') === '1') {
-  setTimeout(()=>{ location.href = document.getElementById('go').href; }, 1200);
-}
-</script>
+<style>body{font:13px/1.4 -apple-system,system-ui,sans-serif;padding:10px;background:#0b0b0c;color:#eaeaea;margin:0}
+.k{color:#7dd3fc}.box{border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;word-break:break-all}
+iframe{width:100%;height:430px;border:2px solid #a16207;border-radius:8px;background:#1a1000}</style>
+<h3 style="margin:4px 0">Vendor Mini App (its own integration origin)</h3>
+<div class="box">top origin: <span class="k" id="o"></span></div>
+<div class="box">Below is an iframe from <span class="k">raw.githack.com</span>, a host that is NOT the integration origin and is NOT in Additional Domains.</div>
+<iframe src="https://raw.githack.com/davidxbors/wc-originbridge-poc/master/iframe.html"></iframe>
+<script>document.getElementById('o').textContent=location.origin;</script>
