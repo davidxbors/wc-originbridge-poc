@@ -1,0 +1,10 @@
+<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vendor Mini App</title>
+<style>body{font:13px/1.4 -apple-system,system-ui,sans-serif;padding:10px;background:#0b0b0c;color:#eaeaea;margin:0}
+.k{color:#7dd3fc}.box{border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;word-break:break-all}
+iframe{width:100%;height:430px;border:2px solid #a16207;border-radius:8px;background:#1a1000}</style>
+<h3 style="margin:4px 0">Vendor Mini App (its own integration origin)</h3>
+<div class="box">top origin: <span class="k" id="o"></span></div>
+<div class="box">Below is an iframe from <span class="k">raw.githack.com</span>, a host that is NOT the integration origin and is NOT in Additional Domains.</div>
+<iframe src="https://raw.githack.com/davidxbors/wc-originbridge-poc/master/iframe2.html"></iframe>
+<script>document.getElementById('o').textContent=location.origin;</script>
