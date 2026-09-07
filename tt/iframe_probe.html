@@ -1,0 +1,12 @@
+<!doctype html><meta charset=utf-8><title>TT bridge probe (top)</title>
+<body style="font:12px/1.4 monospace;padding:8px">
+<h3 id=h>TT bridge probe - IFRAME</h3><pre id=out></pre>
+<script src="lib.js"></script>
+<script>
+TT.hook();
+TT.put("href = " + location.href);
+TT.put("frame = " + (window.top===window.self ? "TOP" : "IFRAME"));
+TT.put("bridges = " + TT.bridges().join(","));
+TT.beacon("LOADED_IFRAME", location.href + " bridges=" + TT.bridges().join(","));
+["appInfo","userInfo","apiParam","x.getUserInfo","x.getAPIParams","fetch","openSchema","copyToClipboard"].forEach(function(m){ TT.call(m); });
+</script>
